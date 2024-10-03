@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Container } from "react-bootstrap";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
+import {Button} from "react-bootstrap";
+import {Table} from "react-bootstrap";
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
+  const [api, setApi] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("localhost:4000");
+        const jsonData = await api.json();
+        const apartementsData = jsonData.find(
+          (item) => item.model === "Apartements"
+        ).data.possessions;
+        setData(apartementsData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+      }
+    });
+    return (
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <h1>Liste des Apartements</h1>
+        {data ? (
+                  <Table striped bordered hover>
+                    <thead>
+                      <tr>
+                        <th>id</th>
+                        <th>description</th>
+                        <th>price</th>
+                        <th>picture</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.map((p, index) => (
+                        <tr key={index}>
+                          <td>{p.id}</td>
+                          <td>{p.description.toLocaleString()}</td>
+                          <td>{(p.price).toLocaleString()}</td>
+                          <td>{p.picture}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                ) : (
+                  <p>Chargement des données...</p>
+                )}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    )
+};
 
-export default App
+export default App;
