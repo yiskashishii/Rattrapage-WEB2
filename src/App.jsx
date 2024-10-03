@@ -8,6 +8,11 @@ import {Table} from "react-bootstrap";
 
 function App() {
   const [api, setApi] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+
+function handleSearchChange(ev) {
+  setSearchTerm(ev.target.value);
+}
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -49,7 +54,11 @@ function App() {
                 ) : (
                   <p>Chargement des données...</p>
                 )}
+        <div className="mt-3">
+        <input onChange={handleSearchChange}  value={searchTerm}  className="mx-2"/>
+        </div>
       </div>
+      
     )
 };
 
